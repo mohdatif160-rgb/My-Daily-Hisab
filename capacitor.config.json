@@ -1,0 +1,8 @@
+{
+  "appId": "com.mydailyhisab.app",
+  "appName": "My Daily Hisab",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
