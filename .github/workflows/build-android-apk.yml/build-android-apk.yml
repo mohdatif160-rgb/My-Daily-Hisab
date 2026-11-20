@@ -1,0 +1,48 @@
+
+name: Build My Daily Hisab APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install packages
+        run: |
+          npm install
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      - name: Prepare web files
+        run: |
+          mkdir -p www
+          cp index.html app.js style.css manifest.json www/
+
+      - name: Build Android
+        run: |
+          npx cap add android
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Save APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: My-Daily-Hisab-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
